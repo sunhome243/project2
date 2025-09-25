@@ -12,6 +12,7 @@ public:
     MinQueue();
     MinQueue(const T *A, int n);
     ~MinQueue();
+    void sort();
 
 private:
     T *arr;
@@ -23,6 +24,9 @@ private:
     int parent(int i);
     void build_min_heap();
     void heapify(int i);
+    void heapsort(T *A);
+    void swap(int index1, int index2);
+    void max_heapify(int i);
 };
 
 #include "minqueue.cpp"

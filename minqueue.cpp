@@ -1,3 +1,8 @@
+#ifndef MQ_CPP
+#define MQ_CPP
+
+#include "minqueue.h"
+
 template <typename T>
 MinQueue<T>::MinQueue() : arr(nullptr), size(0), capacity(0)
 {
@@ -49,38 +54,101 @@ int MinQueue<T>::parent(int i)
 template <typename T>
 void MinQueue<T>::build_min_heap()
 {
-    for (i = (n - 1) / 2; i > 1; i--)
+    for (int i = (size - 1) / 2; i >= 0; i--)
     {
-        heapify(i)
+        heapify(i);
     }
 }
 
 template <typename T>
 void MinQueue<T>::heapify(int i)
 {
-    left_item = left(i);
-    right_item = right(i);
-    current_item = A[i];
-    if (left(i) > A[i])
+    int l = left(i);
+    int r = right(i);
+    int smallest = i;
+
+    if (l < size && arr[l] < arr[smallest])
     {
-        largest = left(i);
-    }
-    else
-    {
-        largest = A[i];
+        smallest = l;
     }
 
-    if (right(i) > A[i])
+    if (r < size && arr[r] < arr[smallest])
     {
-        largest = right_item
+        smallest = r;
+    }
+
+    if (smallest != i)
+    {
+        swap(i, smallest);
+        heapify(smallest);
+    }
+}
+
+template <typename T>
+void MinQueue<T>::sort()
+{
+    heapsort(arr);
+}
+
+template <typename T>
+void MinQueue<T>::swap(int index1, int index2)
+{
+    T temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
+}
+
+template <typename T>
+void MinQueue<T>::heapsort(T *A)
+{
+    int original_size = size;
+
+    // Build max heap for ascending sort
+    for (int i = (size - 1) / 2; i >= 0; i--)
+    {
+        max_heapify(i);
+    }
+
+    for (int i = size - 1; i > 0; i--)
+    {
+        swap(0, i);
+        size--;
+        max_heapify(0);
+    }
+
+    // Copy sorted array to A
+    for (int i = 0; i < original_size; i++)
+    {
+        A[i] = arr[i];
+    }
+
+    // Restore original size and min heap property
+    size = original_size;
+    build_min_heap();
+}
+
+template <typename T>
+void MinQueue<T>::max_heapify(int i)
+{
+    int l = left(i);
+    int r = right(i);
+    int largest = i;
+
+    if (l < size && arr[l] > arr[largest])
+    {
+        largest = l;
+    }
+
+    if (r < size && arr[r] > arr[largest])
+    {
+        largest = r;
     }
 
     if (largest != i)
     {
-        heapify(largest)
-    }
-    else
-    {
-        return
+        swap(i, largest);
+        max_heapify(largest);
     }
 }
+
+#endif
